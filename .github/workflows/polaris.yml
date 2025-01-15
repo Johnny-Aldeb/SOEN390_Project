@@ -22,7 +22,7 @@ jobs:
           node-version: '20.17.0'
       - name: Install modules
         run: cd Polaris-FE && npm i
-      - name: Run front end test suite
+      - name: Run Test Suite
         run: cd Polaris-FE && npm run ci-test
-      - name: Run front end linter
+      - name: Run Linter
         run: cd Polaris-FE && npm run lint
