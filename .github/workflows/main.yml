@@ -2,8 +2,12 @@ name: Polaris-FE CI/CD
 
 on:
   push:
+    branches:
+      - main
+      - chore/ci-cd
     paths:
       - 'Polaris-FE/**'
+
   pull_request:
     branches:
       - main
