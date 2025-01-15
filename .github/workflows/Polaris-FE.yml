@@ -1,0 +1,28 @@
+name: Polaris-FE CI/CD
+
+on:
+  push:
+    paths:
+      - 'Polaris-FE/**'
+  pull_request:
+    branches:
+      - main
+    paths: 
+      - 'Polaris-FE/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download repository
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.17.0'
+      - name: Install modules
+        run: cd Polaris-FE && npm i
+      - name: Run front end test suite
+        run: cd Polaris-FE && npm run test
+      - name: Run front end linter
+        run: cd Polaris-FE && npm run lint
