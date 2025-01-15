@@ -23,6 +23,6 @@ jobs:
       - name: Install modules
         run: cd Polaris-FE && npm i
       - name: Run front end test suite
-        run: cd Polaris-FE && npm run test
+        run: cd Polaris-FE && npm run ci-test
       - name: Run front end linter
         run: cd Polaris-FE && npm run lint
