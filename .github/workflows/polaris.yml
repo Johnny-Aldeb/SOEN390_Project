@@ -2,7 +2,7 @@ name: Polaris-FE CI/CD
 
 on:
   push:
-    paths:
+    paths: 
       - 'Polaris-FE/**'
   pull_request:
     branches:
@@ -22,7 +22,7 @@ jobs:
           node-version: '20.17.0'
       - name: Install modules
         run: cd Polaris-FE && npm i
-      - name: Run front end test suite
-        run: cd Polaris-FE && npm run test
-      - name: Run front end linter
+      - name: Run Test Suite
+        run: cd Polaris-FE && npm run ci-test
+      - name: Run Linter
         run: cd Polaris-FE && npm run lint
