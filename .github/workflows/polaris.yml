@@ -2,13 +2,13 @@ name: Polaris-FE CI/CD
 
 on:
   push:
-    paths: 
-      - 'Polaris-FE/**'
+    paths:
+      - "Polaris-FE/**"
   pull_request:
     branches:
       - main
-    paths: 
-      - 'Polaris-FE/**'
+    paths:
+      - "Polaris-FE/**"
 
 jobs:
   build:
@@ -19,10 +19,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.17.0'
+          node-version: "20.17.0"
       - name: Install modules
         run: cd Polaris-FE && npm i
       - name: Run Test Suite
         run: cd Polaris-FE && npm run ci-test
       - name: Run Linter
         run: cd Polaris-FE && npm run lint
+      - name: Check Code Formatting
+        run: cd Polaris-FE && npm run format:check

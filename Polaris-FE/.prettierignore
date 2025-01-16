@@ -1,0 +1,21 @@
+# Ignore dependencies and build output
+node_modules/
+build/
+dist/
+
+# Ignore platform-specific directories
+ios/
+android/
+
+# Ignore configuration and logs
+*.log
+*.config.js
+*.config.ts
+
+# Ignore specific files
+.expo/
+scripts/reset-project.js
+*.json
+.env*
+*.md
+*.yml
