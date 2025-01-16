@@ -8,6 +8,7 @@ type Props = Omit<ComponentProps<typeof Link>, 'href'> & { href: string };
 export function ExternalLink({ href, ...rest }: Props) {
   console.log("hello")
   console.log("hello")
+  console.log("hello")
   return (
     <Link
       target="_blank"
