@@ -12,7 +12,8 @@
     "ci-test": "jest",
     "lint": "expo lint",
     "format:check": "prettier --check .",
-    "format:fix": "prettier --write ."
+    "format:fix": "prettier --write .",
+    "prepare": "husky"
   },
   "jest": {
     "preset": "jest-expo"
