@@ -61,6 +61,5 @@
     "hooks": {
       "pre-commit": "npm run format:fix"
     }
-  },
-   "prepare":"husky || true"
+  }
 }

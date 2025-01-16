@@ -1,1 +1,1 @@
-npm run format:fix
+npm test
