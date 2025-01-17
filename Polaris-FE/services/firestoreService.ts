@@ -1,20 +1,16 @@
-import { db } from "@/firebase/firebaseConfig";
-import { collection, getDocs } from "firebase/firestore";
+import { db } from '@/firebase/firebaseConfig';
+import { collection, getDocs } from 'firebase/firestore';
 
 export const fetchDepartmentsAndServices = async () => {
-    try {
+  try {
+    const data = await getDocs(collection(db, 'CampusDepartmentAndServices'));
 
-        const data = await getDocs(collection(db, "CampusDepartmentAndServices"));
-
-        return data.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          }));
-
-
-    } catch (error) {
-        //should have better error handeling in the future, for testing purpose, will keep it like this 
-        console.log(error);
-
-    }
-}
+    return data.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+  } catch (error) {
+    //should have better error handeling in the future, for testing purpose, will keep it like this
+    console.log(error);
+  }
+};
