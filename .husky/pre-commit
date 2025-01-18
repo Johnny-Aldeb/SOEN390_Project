@@ -1,2 +1,2 @@
 #!/bin/sh
-cd polaris-fe && npm run format:fix
+cd polaris-fe && npx lint-staged
