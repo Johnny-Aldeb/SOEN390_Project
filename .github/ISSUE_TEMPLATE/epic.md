@@ -27,16 +27,6 @@ Define the objectives of this epic.
 
 ---
 
-### **User Stories**
-
-List the associated user stories that make up this epic.
-
-- [ ] **[Story Title]** - [Short description or link to the story]
-- [ ] **[Story Title]** - [Short description or link to the story]
-- [ ] **[Story Title]** - [Short description or link to the story]
-
----
-
 ### **Acceptance Criteria**
 
 Define the conditions that must be met for this epic to be considered complete.
