@@ -47,15 +47,6 @@ List the deliverables associated with this epic.
 
 ---
 
-### **Timeline**
-
-Specify the expected timeline for completing this epic.
-
-- Start Date: [YYYY-MM-DD]
-- End Date: [YYYY-MM-DD]
-
----
-
 ### **Priority**
 
 [High/Medium/Low]
