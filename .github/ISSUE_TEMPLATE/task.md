@@ -46,4 +46,4 @@ If necessary, break the task into smaller subtasks:
 
 ### **Additional Notes**
 
-Assignee(s) can use this section for note-taking, adding any additional context or information that might help resolve the bug, such as relevant pull requests, related issues, or details about the developer responsible for the original feature.
+Add any relevant details, notes, screenshots, links, or references here to provide more clarity.

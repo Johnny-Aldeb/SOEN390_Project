@@ -37,16 +37,6 @@ Define the conditions that must be met for this epic to be considered complete.
 
 ---
 
-### **Deliverables**
-
-List the deliverables associated with this epic.
-
-- [ ] [Deliverable 1]
-- [ ] [Deliverable 2]
-- [ ] [Deliverable 3]
-
----
-
 ### **Priority**
 
 [High/Medium/Low]
@@ -62,12 +52,6 @@ List any stakeholders or teams involved in this epic.
 
 ---
 
-### **Additional Information**
+### **Additional Notes**
 
-Include any additional context, resources, or references that would be helpful for understanding or completing this epic.
-
----
-
-### **Notes**
-
-Add any extra notes or considerations here.
+Add any relevant details, notes, screenshots, links, or references here to provide more clarity.

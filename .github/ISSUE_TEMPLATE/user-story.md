@@ -26,26 +26,13 @@ Provide a brief description of the feature or functionality. Include any relevan
 
 ---
 
-### **Tasks**
-
-- [ ] [Task 1: Describe the first actionable task]
-- [ ] [Task 2: Describe the second actionable task]
-- [ ] [Task 3: Describe the third actionable task]
-
----
-
-### **Additional Information**
-
-Add any relevant details, screenshots, links, or references here to provide more clarity.
-
----
-
 ### **Priority**
 
 [High/Medium/Low]
 
 ---
 
-### **Notes**
+### **Additional Notes**
 
-Add any extra notes or considerations here.
+Add any relevant details, notes, screenshots, links, or references here to provide more clarity.
+
