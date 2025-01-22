@@ -20,7 +20,7 @@ Provide an overview of the epic, including its purpose and value. Explain the pr
 
 ### **Goals**
 
-Define the objectives of this epic.
+Define the objectives of this epic. Explains the _why_ we need this epic.
 
 - [ ] [Goal 1: What is this epic aiming to achieve?]
 - [ ] [Goal 2: Additional objectives, if any.]
