@@ -13,7 +13,6 @@
         "NSLocationWhenInUseUsageDescription": "Allow the app to access your location."
       },
       "config": {
-        "googleMapsApiKey": "AIzaSyDzOmf30jmF8Kd7JFUCNcjeqwqf26Ndg_0"
       },
       "supportsTablet": true
     },
