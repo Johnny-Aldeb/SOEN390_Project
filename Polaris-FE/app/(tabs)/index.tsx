@@ -1,13 +1,55 @@
-import { Image, StyleSheet, Platform, Button } from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Platform,
+  Button,
+  View,
+  FlatList,
+} from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import * as WebBrowser from 'expo-web-browser';
+
+import {
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithCredential,
+} from 'firebase/auth';
+import * as Google from 'expo-auth-session/providers/google';
+import { auth } from '@/firebase/firebaseConfig';
 
 export default function HomeScreen() {
   const [val, setVal] = useState<number>(0);
+  const [userInfo, setUserInfo] = useState();
+  const [requst, response, promptAsync] = Google.useAuthRequest({
+    iosClientId:
+      '320433803938-mjqsskeqt4r76d6bt0lq07s8t7rtvhk8.apps.googleusercontent.com',
+    androidClientId:
+      '320433803938-lal402dcumivvmlg5cseciocm2suk0ip.apps.googleusercontent.com',
+  });
+
+  useEffect(() => {
+    if (response?.type === 'success') {
+      const { id_token } = response.params;
+      const credential = GoogleAuthProvider.credential(id_token);
+      signInWithCredential(auth, credential);
+    }
+  }, [response]);
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, async user => {
+      if (user) {
+        console.log(JSON.stringify(user, null, 2));
+      } else {
+        console.log('else');
+      }
+    });
+  }, []);
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -21,6 +63,14 @@ export default function HomeScreen() {
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Welcome!</ThemedText>
         <HelloWave />
+        <View>
+          <View>
+            <Button
+              title="Login and Fetch Events"
+              onPress={() => promptAsync()}
+            />
+          </View>
+        </View>
       </ThemedView>
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title" testID="homescreen-title-value">
