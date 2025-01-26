@@ -10,11 +10,6 @@ it('Testing the native elements of initial application layout - tabs', () => {
   // The line below scans the rendered component and queries the element that has attribute testID='root-container-view' and saves in element variable
   const element: unknown = screen.getByTestId('root-container-view');
 
-  //Step3: Assertion
-  // Here we test that the queried element has a certain value
-  if (typeof element === 'object' && element !== null && 'props' in element) {
-    expect(element).toHaveTextContent('Hello from RootLayout');
-  }
   //Extra/Debug: It is possible to display what is rendered on screen by uncommenting the line below:
   //   screen.debug();
 });
