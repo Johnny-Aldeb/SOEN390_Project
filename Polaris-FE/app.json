@@ -12,8 +12,6 @@
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Allow the app to access your location."
       },
-      "config": {
-      },
       "supportsTablet": true
     },
     "android": {
