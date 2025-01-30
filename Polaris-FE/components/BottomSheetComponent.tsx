@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import BottomSheet, {
   BottomSheetTextInput,
@@ -8,17 +8,17 @@ import Animated from 'react-native-reanimated';
 
 interface BottomSheetComponentProps {
   bottomSheetRef: React.RefObject<BottomSheet>;
-  snapPoints: string[];
-  handleInputFocus: () => void;
+  onFocus: () => void;
   animatedPosition: Animated.SharedValue<number>;
 }
 
 export const BottomSheetComponent: React.FC<BottomSheetComponentProps> = ({
   bottomSheetRef,
-  snapPoints,
-  handleInputFocus,
+  onFocus,
   animatedPosition,
 }) => {
+  const snapPoints = useMemo(() => ['15%', '50%', '92%'], []);
+
   return (
     <BottomSheet
       index={1}
@@ -34,7 +34,7 @@ export const BottomSheetComponent: React.FC<BottomSheetComponentProps> = ({
         <BottomSheetTextInput
           placeholder={'Search Polaris'}
           style={styles.input}
-          onFocus={handleInputFocus}
+          onFocus={onFocus}
         />
       </BottomSheetView>
     </BottomSheet>

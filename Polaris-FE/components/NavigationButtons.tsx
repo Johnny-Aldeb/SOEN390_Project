@@ -2,52 +2,32 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
 import { Region } from 'react-native-maps';
 import Animated, {
-  AnimateStyle,
   interpolate,
   useAnimatedStyle,
 } from 'react-native-reanimated';
 import { SvgXml } from 'react-native-svg';
+import { Downtown, Loyola, locationIcon } from '@/constants/mapConstants';
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
 
-export const DOWNTOWN: Region = {
-  latitude: 45.49563786119324,
-  longitude: -73.5792038886834,
-  latitudeDelta: 0.01,
-  longitudeDelta: 0.01,
-};
-
-export const LOYOLA: Region = {
-  latitude: 45.458425391521686,
-  longitude: -73.638868510132,
-  latitudeDelta: 0.01,
-  longitudeDelta: 0.01,
-};
+const AnimatedView = Animated.createAnimatedComponent(View);
 
 import { SharedValue } from 'react-native-reanimated';
 
 interface NavigationButtonsProps {
-  showCampusOptions: boolean;
-  handleCampusToggle: () => void;
-  handleCampusSelect: (region: Region) => void;
-  handleCurrentLocationPress: () => void;
-  optionsStyle: AnimateStyle<any>;
+  onCampusToggle: () => void;
+  onCampusSelect: (region: Region) => void;
+  onCurrentLocationPress: () => void;
+  optionsAnimation: SharedValue<number>;
   animatedPosition: SharedValue<number>;
 }
 
-const mySymbolXML = `
-<svg width="74" height="73" viewBox="0 0 74 73" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M6.63977 39.7246L33.3976 39.8711C34.0324 39.8711 34.2277 40.0664 34.2277 40.6523L34.3253 67.2637C34.3253 73.5625 41.9914 75.1738 44.8722 68.875L72.5089 9.20702C75.341 3.05472 70.4582 -1.04688 64.5011 1.68752L4.44247 29.4707C-1.02625 31.9609 0.0479712 39.6758 6.63977 39.7246Z" fill="white"/>
-</svg>
-`;
-
 export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
-  showCampusOptions,
-  handleCampusToggle,
-  handleCampusSelect,
-  handleCurrentLocationPress,
-  optionsStyle,
+  onCampusToggle,
+  onCampusSelect,
+  onCurrentLocationPress,
+  optionsAnimation,
   animatedPosition,
 }) => {
   const buttonsStyle = useAnimatedStyle(() => {
@@ -70,33 +50,44 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
       opacity,
     };
   });
+
+  const optionsStyle = useAnimatedStyle(() => {
+    return {
+      opacity: optionsAnimation.value,
+      transform: [
+        { translateY: interpolate(optionsAnimation.value, [0, 1], [20, 0]) },
+        { scale: interpolate(optionsAnimation.value, [0, 1], [0.8, 1]) },
+      ],
+    };
+  });
+
   return (
-    <Animated.View
+    <AnimatedView
       testID="animated-container"
       style={[styles.buttonsWrapper, buttonsStyle]}
     >
       <View>
-        <Animated.View style={[styles.downtownOption, optionsStyle]}>
+        <AnimatedView style={[styles.downtownOption, optionsStyle]}>
           <TouchableOpacity
             style={[styles.campusOption, styles.downtownButton]}
-            onPress={() => handleCampusSelect(DOWNTOWN)}
+            onPress={() => onCampusSelect(Downtown)}
           >
             <Text style={styles.campusButtonText}>Downtown</Text>
           </TouchableOpacity>
-        </Animated.View>
+        </AnimatedView>
 
-        <Animated.View style={[styles.loyolaOption, optionsStyle]}>
+        <AnimatedView style={[styles.loyolaOption, optionsStyle]}>
           <TouchableOpacity
             style={styles.campusOption}
-            onPress={() => handleCampusSelect(LOYOLA)}
+            onPress={() => onCampusSelect(Loyola)}
           >
             <Text style={styles.campusButtonText}>Loyola</Text>
           </TouchableOpacity>
-        </Animated.View>
+        </AnimatedView>
 
         <AnimatedTouchableOpacity
           style={styles.toggleButton}
-          onPress={handleCampusToggle}
+          onPress={onCampusToggle}
         >
           <Text testID="button-campus" style={styles.toggleButtonText}>
             Campus
@@ -106,23 +97,23 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
       <AnimatedTouchableOpacity
         testID="button-current-location"
         style={styles.toggleButton}
-        onPress={handleCurrentLocationPress}
+        onPress={onCurrentLocationPress}
       >
-        <SvgXml xml={mySymbolXML} width={16} height={16} />
+        <SvgXml xml={locationIcon} width={16} height={16} />
       </AnimatedTouchableOpacity>
-    </Animated.View>
+    </AnimatedView>
   );
 };
 
 const styles = StyleSheet.create({
   buttonsWrapper: {
     position: 'absolute',
-    left: 0,
-    right: 0,
+    left: 14,
+    right: 14,
+    pointerEvents: 'box-none',
     bottom: '100.5%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 14,
     marginBottom: 8,
   },
   toggleButton: {

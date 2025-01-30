@@ -30,8 +30,7 @@ describe('BottomSheetComponent', () => {
     const { getByPlaceholderText } = render(
       <BottomSheetComponent
         bottomSheetRef={mockBottomSheetRef}
-        snapPoints={mockSnapPoints}
-        handleInputFocus={mockHandleInputFocus}
+        onFocus={mockHandleInputFocus}
         animatedPosition={mockAnimatedPosition}
       />
     );
@@ -45,8 +44,7 @@ describe('BottomSheetComponent', () => {
     const { getByPlaceholderText } = render(
       <BottomSheetComponent
         bottomSheetRef={mockBottomSheetRef}
-        snapPoints={mockSnapPoints}
-        handleInputFocus={mockHandleInputFocus}
+        onFocus={mockHandleInputFocus}
         animatedPosition={mockAnimatedPosition}
       />
     );
@@ -62,8 +60,7 @@ describe('BottomSheetComponent', () => {
     const { getByPlaceholderText } = render(
       <BottomSheetComponent
         bottomSheetRef={mockBottomSheetRef}
-        snapPoints={mockSnapPoints}
-        handleInputFocus={mockHandleInputFocus}
+        onFocus={mockHandleInputFocus}
         animatedPosition={mockAnimatedPosition}
       />
     );
