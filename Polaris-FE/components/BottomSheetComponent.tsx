@@ -17,7 +17,7 @@ export const BottomSheetComponent: React.FC<BottomSheetComponentProps> = ({
   onFocus,
   animatedPosition,
 }) => {
-  const snapPoints = useMemo(() => ['15%', '50%', '92%'], []);
+  const snapPoints = useMemo(() => ['15%', '50%', '93%'], []);
 
   return (
     <BottomSheet

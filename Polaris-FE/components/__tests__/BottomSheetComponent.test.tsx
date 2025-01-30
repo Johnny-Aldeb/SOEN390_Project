@@ -8,9 +8,6 @@ describe('BottomSheetComponent', () => {
   // Create a ref that matches the BottomSheet type
   const mockBottomSheetRef = React.createRef<BottomSheet>();
 
-  // Example snapPoints
-  const mockSnapPoints = ['25%', '50%', '75%'];
-
   // A mock callback for when the input is focused
   const mockHandleInputFocus = jest.fn();
 
