@@ -9,13 +9,19 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Allow the app to access your location."
+      },
+      "config": {},
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.PolarisFE"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.PolarisFE"
     },
     "web": {
       "bundler": "metro",
