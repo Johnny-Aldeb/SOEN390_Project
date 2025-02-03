@@ -1,20 +1,12 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent, screen } from '@testing-library/react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
-import { BottomSheetComponent } from '@/components/BottomSheetComponent'; // <-- Adjust path
+import { BottomSheetComponent } from '@/components/BottomSheetComponent';
 import Animated from 'react-native-reanimated';
 
 describe('BottomSheetComponent', () => {
-  // Create a ref that matches the BottomSheet type
   const mockBottomSheetRef = React.createRef<BottomSheet>();
-
-  // Example snapPoints
-  const mockSnapPoints = ['25%', '50%', '75%'];
-
-  // A mock callback for when the input is focused
   const mockHandleInputFocus = jest.fn();
-
-  // If you see TS type errors about SharedValue, you can mock it like so:
   const mockAnimatedPosition = {
     value: 0,
     set: jest.fn(),
@@ -27,48 +19,44 @@ describe('BottomSheetComponent', () => {
   });
 
   it('renders the BottomSheet with the provided placeholder text', () => {
-    const { getByPlaceholderText } = render(
+    render(
       <BottomSheetComponent
         bottomSheetRef={mockBottomSheetRef}
-        snapPoints={mockSnapPoints}
-        handleInputFocus={mockHandleInputFocus}
+        onFocus={mockHandleInputFocus}
         animatedPosition={mockAnimatedPosition}
       />
     );
 
-    // The text input should show up with the placeholder.
-    const textInput = getByPlaceholderText('Search Polaris');
-    expect(textInput).toBeTruthy();
+    const textInput = screen.queryByTestId('container-bottom-sheet-text-input');
+    expect(textInput).toHaveProp('placeholder', 'Search Polaris');
   });
 
   it('calls handleInputFocus when the text input is focused', () => {
-    const { getByPlaceholderText } = render(
+    render(
       <BottomSheetComponent
         bottomSheetRef={mockBottomSheetRef}
-        snapPoints={mockSnapPoints}
-        handleInputFocus={mockHandleInputFocus}
+        onFocus={mockHandleInputFocus}
         animatedPosition={mockAnimatedPosition}
       />
     );
 
-    const textInput = getByPlaceholderText('Search Polaris');
-    // fireEvent has a specific event for focusing a text input
+    const textInput = screen.getByTestId('container-bottom-sheet-text-input');
     fireEvent(textInput, 'focus');
-
     expect(mockHandleInputFocus).toHaveBeenCalledTimes(1);
   });
 
   it('sets up the BottomSheet with the given snapPoints and animatedPosition', () => {
-    const { getByPlaceholderText } = render(
+    render(
       <BottomSheetComponent
         bottomSheetRef={mockBottomSheetRef}
-        snapPoints={mockSnapPoints}
-        handleInputFocus={mockHandleInputFocus}
+        onFocus={mockHandleInputFocus}
         animatedPosition={mockAnimatedPosition}
       />
     );
 
-    // Just verifying the input is rendered to confirm the sheet is mounted
-    expect(getByPlaceholderText('Search Polaris')).toBeTruthy();
+    expect(screen.getByTestId('container-bottom-sheet-text-input')).toHaveProp(
+      'placeholder',
+      'Search Polaris'
+    );
   });
 });
