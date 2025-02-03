@@ -32,6 +32,7 @@ export const BottomSheetComponent: React.FC<BottomSheetComponentProps> = ({
     >
       <BottomSheetView style={styles.contentContainer}>
         <BottomSheetTextInput
+          testID="container-bottom-sheet-text-input"
           placeholder={'Search Polaris'}
           style={styles.input}
           onFocus={onFocus}
