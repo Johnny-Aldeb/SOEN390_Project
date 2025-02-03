@@ -14,8 +14,6 @@ export const config = {
   measurementId: Constants.expoConfig?.extra?.firebaseMeasurementId,
 };
 
-console.log(config.apiKey);
-
 // Initialize Firebase
 const app = !getApps().length ? initializeApp(config) : getApps()[0];
 
