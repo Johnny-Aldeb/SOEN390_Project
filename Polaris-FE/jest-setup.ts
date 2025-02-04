@@ -102,6 +102,7 @@ jest.mock('react-native-maps', () => {
     __esModule: true,
     default: View,
     Marker: View,
+    Geojson: View,
   };
 });
 
