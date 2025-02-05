@@ -12,7 +12,7 @@ Describe the specific work that needs to be done. Include context, the purpose o
 
 ---
 
-### **Completion Requirements**
+### **Completion Requirements (Optional)**
 
 Define the conditions under which this task will be considered complete:
 
@@ -22,6 +22,6 @@ Define the conditions under which this task will be considered complete:
 
 ---
 
-### **Additional Notes**
+### **Additional Notes (Optional)**
 
 [ Notes to be added by the assignee of the task for future references ]

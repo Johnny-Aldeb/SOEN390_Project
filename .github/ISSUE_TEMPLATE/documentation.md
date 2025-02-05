@@ -15,5 +15,5 @@ Describe the specific work that needs to be done. Include context, the purpose o
 ### **Link to document**
 [ Any links to the documentation file ]
 
-### **Additional Notes**
+### **Additional Notes (Optional)**
 [ Notes to be added by the assignee of the task for future references ]
