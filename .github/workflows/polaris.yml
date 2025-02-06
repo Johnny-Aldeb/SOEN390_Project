@@ -61,14 +61,13 @@ jobs:
             -Dsonar.organization=your-org-key \
             -Dsonar.projectKey=your-project-key \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.token=$SONAR_TOKEN \
-            -Dsonar.pullrequest.key=${{ github.event.pull_request.number }} \
-            -Dsonar.pullrequest.branch=${{ github.head_ref }} \
-            -Dsonar.pullrequest.base=${{ github.base_ref }}
+            -Dsonar.token=$SONAR_TOKEN
 
       - name: Fail if SonarCloud Quality Gate fails
+        env:
+          SONAR_TOKEN: ${{ secrets.SONARQUBE }}
         run: |
-          SONAR_STATUS=$(curl -s -u ${{ secrets.SONARQUBE }}: \
+          SONAR_STATUS=$(curl -s -u $SONAR_TOKEN: \
           "https://sonarcloud.io/api/qualitygates/project_status?projectKey=your-project-key" \
           | jq -r .projectStatus.status)
 
