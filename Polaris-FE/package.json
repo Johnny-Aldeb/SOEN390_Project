@@ -15,7 +15,7 @@
     "format:check": "prettier --check .",
     "format:fix": "prettier --write .",
     "prepare": "cd .. && husky",
-    "sonar-scanner": "sonarqube-scanner"
+    "test:coverage": "jest --coverage"
   },
   "jest": {
     "preset": "jest-expo",
