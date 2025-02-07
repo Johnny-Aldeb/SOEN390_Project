@@ -60,7 +60,7 @@ jobs:
       - name: Debug Downloaded Artifact
         run: ls -l
       - name: Move lcov.info to SonarQube expected path
-        run: mv lcov.info Polaris-FE/coverage/lcov.info
+        run: mv ./coverage/lcov.info ./
       - name: Run SonarQube Scanner
         env:
           SONAR_TOKEN: ${{ secrets.SONARQUBE }}
