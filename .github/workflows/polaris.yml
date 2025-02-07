@@ -32,13 +32,13 @@ jobs:
         run: |
           cd Polaris-FE
           npm run test:coverage
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5
+      - name: Debug Coverage File
+        run: ls -l Polaris-FE/coverage
+      - name: Upload lcov.info file
+        uses: actions/upload-artifact@v4
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-      - name: Move Coverage File for SonarQube
-        run: |
-          mv Polaris-FE/coverage/lcov.info lcov.info
+          name: lcov-info
+          path: Polaris-FE/coverage/lcov.info
 
   sonarqube:
     name: SonarQube Analysis
@@ -53,6 +53,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+      - name: Download lcov.info file
+        uses: actions/download-artifact@v4
+        with:
+          name: lcov-info
+      - name: Debug Downloaded Artifact
+        run: ls -l
+      # - name: Move lcov.info to SonarQube expected path
+      #   run: mv ./coverage/lcov.info ./
       - name: Run SonarQube Scanner
         env:
           SONAR_TOKEN: ${{ secrets.SONARQUBE }}
