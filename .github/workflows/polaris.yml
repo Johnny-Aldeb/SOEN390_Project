@@ -59,8 +59,8 @@ jobs:
           name: lcov-info
       - name: Debug Downloaded Artifact
         run: ls -l
-      - name: Move lcov.info to SonarQube expected path
-        run: mv ./coverage/lcov.info ./
+      # - name: Move lcov.info to SonarQube expected path
+      #   run: mv ./coverage/lcov.info ./
       - name: Run SonarQube Scanner
         env:
           SONAR_TOKEN: ${{ secrets.SONARQUBE }}
@@ -71,6 +71,6 @@ jobs:
             -Dsonar.organization=390minicapstone \
             -Dsonar.sources=. \
             -Dsonar.exclusions=node_modules/**,dist/**,build/** \
-            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+            -Dsonar.javascript.lcov.reportPaths=lcov.info \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=$SONAR_TOKEN
