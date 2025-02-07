@@ -6,7 +6,7 @@ on:
       - "Polaris-FE/**"
   pull_request:
     branches:
-      - main
+      - testing-main-do-not-push
     paths:
       - "Polaris-FE/**"
 
