@@ -1,7 +1,5 @@
 import { GoogleEvent } from '@/constants/GoogleEvent';
 
-const useless = 'test';
-
 export async function fetchCalendars(accessToken: string) {
   const response = await fetch(
     'https://www.googleapis.com/calendar/v3/users/me/calendarList',
