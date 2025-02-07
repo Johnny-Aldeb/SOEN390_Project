@@ -36,9 +36,11 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-      - name: Move Coverage File for SonarQube
-        run: |
-          mv Polaris-FE/coverage/lcov.info lcov.info
+      - name: Upload coverage files
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage
+          path: coverage
 
   sonarqube:
     name: SonarQube Analysis
@@ -53,6 +55,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+      - name: Download coverage files
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage
       - name: Run SonarQube Scanner
         env:
           SONAR_TOKEN: ${{ secrets.SONARQUBE }}
@@ -63,6 +69,6 @@ jobs:
             -Dsonar.organization=390minicapstone \
             -Dsonar.sources=. \
             -Dsonar.exclusions=node_modules/**,dist/**,build/** \
-            -Dsonar.javascript.lcov.reportPaths=lcov.info \
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=$SONAR_TOKEN
