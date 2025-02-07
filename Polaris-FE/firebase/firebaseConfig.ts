@@ -4,7 +4,7 @@ import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 
-export const config = {
+export const configF = {
   apiKey: Constants.expoConfig?.extra?.firebaseApiKey,
   authDomain: Constants.expoConfig?.extra?.firebaseAuthDomain,
   projectId: Constants.expoConfig?.extra?.firebaseProjectId,
@@ -15,7 +15,7 @@ export const config = {
 };
 
 // Initialize Firebase
-const app = !getApps().length ? initializeApp(config) : getApps()[0];
+const app = !getApps().length ? initializeApp(configF) : getApps()[0];
 
 // Firestore
 export const db = getFirestore(app);
