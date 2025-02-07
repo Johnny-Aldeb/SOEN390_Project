@@ -32,11 +32,13 @@ jobs:
         run: |
           cd Polaris-FE
           npm run test:coverage
+      - name: Debug Coverage File
+        run: ls -l Polaris-FE/coverage
       - name: Upload lcov.info file
         uses: actions/upload-artifact@v4
         with:
           name: lcov-info
-          path: ./coverage/lcov.info
+          path: Polaris-FE/coverage/lcov.info
 
   sonarqube:
     name: SonarQube Analysis
@@ -55,9 +57,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: lcov-info
+      - name: Debug Downloaded Artifact
+        run: ls -l
       - name: Move lcov.info to SonarQube expected path
-        run: |
-          mv lcov.info ./coverage/lcov.info
+        run: mv lcov.info Polaris-FE/coverage/lcov.info
       - name: Run SonarQube Scanner
         env:
           SONAR_TOKEN: ${{ secrets.SONARQUBE }}
@@ -68,6 +71,6 @@ jobs:
             -Dsonar.organization=390minicapstone \
             -Dsonar.sources=. \
             -Dsonar.exclusions=node_modules/**,dist/**,build/** \
-            -Dsonar.javascript.lcov.reportPaths=./lcov.info \
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=$SONAR_TOKEN
