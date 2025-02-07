@@ -71,6 +71,6 @@ jobs:
             -Dsonar.organization=390minicapstone \
             -Dsonar.sources=. \
             -Dsonar.exclusions=node_modules/**,dist/**,build/** \
-            -Dsonar.javascript.lcov.reportPaths=lcov.info \
+            -Dsonar.javascript.lcov.reportPaths=../lcov.info \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=$SONAR_TOKEN
