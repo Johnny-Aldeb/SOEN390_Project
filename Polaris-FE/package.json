@@ -14,7 +14,8 @@
     "lint": "eslint . --config eslint.config.js",
     "format:check": "prettier --check .",
     "format:fix": "prettier --write .",
-    "prepare": "cd .. && husky"
+    "prepare": "cd .. && husky",
+    "test:coverage":"jest --coverage"
   },
   "jest": {
     "preset": "jest-expo",
