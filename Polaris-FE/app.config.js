@@ -54,7 +54,10 @@ export default {
       firebaseAppId: process.env.FIREBASE_APP_ID,
       firebaseMeasurementId: process.env.FIREBASE_MEASUREMENT_ID,
       iosClientId: process.env.IOS_CLIENT_ID,
-      androidClientId: process.env.ANDROID_CLIENT_ID
+      androidClientId: process.env.ANDROID_CLIENT_ID,
+      eas: {
+        projectId: "ac62cba3-a6b2-403c-a013-a2362aed84db"
+      }
     }
   }
 }

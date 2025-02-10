@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "expo start",
+    "start:tunnel": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "ios": "expo run:ios",
@@ -15,7 +16,8 @@
     "format:check": "prettier --check .",
     "format:fix": "prettier --write .",
     "prepare": "cd .. && husky",
-    "test:coverage":"jest --coverage"
+    "test:coverage": "jest --coverage",
+    "prebuild": "expo prebuild"
   },
   "jest": {
     "preset": "jest-expo",
