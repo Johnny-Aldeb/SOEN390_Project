@@ -2,6 +2,7 @@ import React from 'react';
 import MapView, { Geojson, Region } from 'react-native-maps';
 import { StyleSheet, View } from 'react-native';
 import { downtownBuildings, loyolaBuildings } from '@/constants/buildings';
+import { Buildings } from './Buildings/Buildings';
 
 interface MapComponentProps {
   mapRef: React.RefObject<MapView>;
@@ -34,6 +35,7 @@ export const MapComponent: React.FC<MapComponentProps> = ({
           geojson={loyolaBuildings as GeoJSON.FeatureCollection}
           fillColor="rgba(143, 34, 54, 0.8)"
         />
+        <Buildings />
       </MapView>
     </View>
   );
