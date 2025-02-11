@@ -64,7 +64,6 @@ export const useMapLocation = () => {
             longitudeDelta: 0.02,
           });
         }, 1000);
-
       } catch (error) {
         setPermissionStatus('error');
       }

@@ -42,14 +42,16 @@ export const MapComponent: React.FC<MapComponentProps> = ({
           <Geojson
             geojson={{
               type: 'FeatureCollection',
-              features: [{
-                type: 'Feature',
-                geometry: {
-                  type: 'Polygon',
-                  coordinates: currentBuilding.geometry.coordinates,
+              features: [
+                {
+                  type: 'Feature',
+                  geometry: {
+                    type: 'Polygon',
+                    coordinates: currentBuilding.geometry.coordinates,
+                  },
+                  properties: {},
                 },
-                properties: {}
-              }],
+              ],
             }}
             fillColor="rgba(0, 0, 255, 0.5)"
             strokeColor="rgba(0, 0, 255, 1)"
