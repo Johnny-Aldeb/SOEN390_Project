@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import MapView, { Region } from 'react-native-maps';
 import { StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -13,6 +13,8 @@ import {
   handleCurrentLocation,
   handleCampusSelect,
   handleCampusToggle,
+  handleSearchSelect,
+  handleLocation,
 } from '@/utils/mapHandlers';
 
 export default function HomeScreen() {
@@ -26,6 +28,8 @@ export default function HomeScreen() {
   const optionsAnimation = useSharedValue(0);
   const animatedPosition = useSharedValue(0);
 
+  // console.log('region:', region)
+
   return (
     <GestureHandlerRootView style={styles.container}>
       <SafeAreaProvider>
@@ -34,7 +38,21 @@ export default function HomeScreen() {
           bottomSheetRef={bottomSheetRef}
           onFocus={() => bottomSheetRef.current?.snapToIndex(3)}
           animatedPosition={animatedPosition}
+          onSearchClick={(selectedRegion: Region) =>
+            handleLocation(
+              selectedRegion,
+              mapRef,
+              toggleAnimation,
+              optionsAnimation
+            )
+          }
+
+          // onSearchClick={() => {
+          //   console.log('Selected Location:', location); // Log the location object
+          //   handleCurrentLocation(mapRef, location);
+          // }}
         />
+
         <NavigationButtons
           onCampusToggle={() =>
             handleCampusToggle(
@@ -67,3 +85,4 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+console;
