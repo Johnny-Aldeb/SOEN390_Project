@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import MapView, { Region } from 'react-native-maps';
 import { StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -13,7 +13,6 @@ import {
   handleCurrentLocation,
   handleCampusSelect,
   handleCampusToggle,
-  handleSearchSelect,
   handleLocation,
 } from '@/utils/mapHandlers';
 
