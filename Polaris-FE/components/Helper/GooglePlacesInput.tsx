@@ -29,13 +29,12 @@ const GooglePlacesInput: React.FC<GooglePlacesInputProps> = ({
         })
         .catch(error => console.error(error));
     } else {
-      setSearchResults([]); // Clear results if input is too short
+      setSearchResults([]);
     }
   }, [query]);
 
   return (
     <View style={styles.container}>
-      {/* Search Input */}
       <TextInput
         value={query}
         onChangeText={setQuery}
@@ -43,8 +42,6 @@ const GooglePlacesInput: React.FC<GooglePlacesInputProps> = ({
         placeholderTextColor="gray"
         style={styles.input}
       />
-
-      {/* Clear (X) Button Inside the Input */}
       {query.length > 0 && (
         <TouchableOpacity
           onPress={() => setQuery('')}
@@ -59,11 +56,11 @@ const GooglePlacesInput: React.FC<GooglePlacesInputProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%', // Ensure the parent view takes full width
+    width: '100%',
     position: 'relative',
   },
   input: {
-    width: '100%', // Ensure TextInput spans full width
+    width: '100%',
     marginRight: 0,
     marginBottom: 0,
     borderRadius: 10,
@@ -79,16 +76,16 @@ const styles = StyleSheet.create({
     right: 14,
     top: '55%',
     transform: [{ translateY: -12 }],
-    width: 20, // Smaller button size
-    height: 20, // Same as width for a perfect circle
-    borderRadius: 10, // Half of width and height to make it circular
+    width: 20,
+    height: 20,
+    borderRadius: 10,
     backgroundColor: 'rgba(151, 151, 151, 0.25)',
-    justifyContent: 'center', // Center the "X"
-    alignItems: 'center', // Center the "X"
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   clearButtonText: {
     color: 'white',
-    fontSize: 12, // Smaller "X"
+    fontSize: 12,
   },
 });
 

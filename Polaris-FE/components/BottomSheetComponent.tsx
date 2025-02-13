@@ -40,7 +40,7 @@ export const BottomSheetComponent: React.FC<BottomSheetComponentProps> = ({
             longitudeDelta: 0.001,
           };
 
-          setSearchResults([]); // Clear results after selection
+          setSearchResults([]);
           onSearchClick(region);
         }
       })
@@ -89,7 +89,7 @@ export const BottomSheetComponent: React.FC<BottomSheetComponentProps> = ({
 
 const styles = StyleSheet.create({
   bottomSheet: {
-    backgroundColor: '#222', // Dark theme
+    backgroundColor: '#222',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
   },
   searchResult: {
-    paddingVertical: 12, // Spacing between results
+    paddingVertical: 12,
     paddingHorizontal: 5,
   },
   searchResultText: {
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 1,
-    backgroundColor: '#5E5F62', // Subtle gray divider
+    backgroundColor: '#5E5F62',
     marginHorizontal: 5,
   },
 });
