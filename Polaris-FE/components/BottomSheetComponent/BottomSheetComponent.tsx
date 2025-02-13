@@ -1,21 +1,18 @@
 import React, { useMemo } from 'react';
 import { StyleSheet } from 'react-native';
-import BottomSheet, {
-  BottomSheetTextInput,
-  BottomSheetView,
-} from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import Animated from 'react-native-reanimated';
 
 interface BottomSheetComponentProps {
   bottomSheetRef: React.RefObject<BottomSheet>;
-  onFocus: () => void;
+  children: React.ReactNode;
   animatedPosition: Animated.SharedValue<number>;
 }
 
 export const BottomSheetComponent: React.FC<BottomSheetComponentProps> = ({
   bottomSheetRef,
-  onFocus,
   animatedPosition,
+  children,
 }) => {
   const snapPoints = useMemo(() => ['15%', '50%', '93%'], []);
 
@@ -31,12 +28,7 @@ export const BottomSheetComponent: React.FC<BottomSheetComponentProps> = ({
       animatedPosition={animatedPosition}
     >
       <BottomSheetView style={styles.contentContainer}>
-        <BottomSheetTextInput
-          testID="container-bottom-sheet-text-input"
-          placeholder={'Search Polaris'}
-          style={styles.input}
-          onFocus={onFocus}
-        />
+        {children}
       </BottomSheetView>
     </BottomSheet>
   );
@@ -46,15 +38,5 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     alignItems: 'center',
-  },
-  input: {
-    width: '92%',
-    marginBottom: 10,
-    borderRadius: 10,
-    fontSize: 16,
-    lineHeight: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-    backgroundColor: 'rgba(151, 151, 151, 0.25)',
   },
 });

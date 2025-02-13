@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
-import { BottomSheetComponent } from '@/components/BottomSheetComponent';
+import { BottomSheetComponent } from '@/components/BottomSheetComponent/BottomSheetComponent';
 import Animated from 'react-native-reanimated';
 
 describe('BottomSheetComponent', () => {
