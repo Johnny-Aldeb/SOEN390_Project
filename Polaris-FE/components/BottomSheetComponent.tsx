@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import Animated from 'react-native-reanimated';
-import GooglePlacesInput from '@/components/Helper/GooglePlacesInput';
+import GooglePlacesInput from '@/components/GooglePlacesInput';
 import { Region } from 'react-native-maps';
 
 interface BottomSheetComponentProps {
