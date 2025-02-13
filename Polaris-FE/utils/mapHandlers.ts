@@ -41,7 +41,6 @@ export const handleCampusSelect = (
   setShowCampusOptions(false);
   toggleAnimation.value = withSpring(0);
   optionsAnimation.value = withTiming(0, { duration: 300 });
-  console.log('Region:', region);
 };
 
 export const handleCampusToggle = (

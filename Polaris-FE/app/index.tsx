@@ -28,8 +28,6 @@ export default function HomeScreen() {
   const optionsAnimation = useSharedValue(0);
   const animatedPosition = useSharedValue(0);
 
-  // console.log('region:', region)
-
   return (
     <GestureHandlerRootView style={styles.container}>
       <SafeAreaProvider>
@@ -46,11 +44,6 @@ export default function HomeScreen() {
               optionsAnimation
             )
           }
-
-          // onSearchClick={() => {
-          //   console.log('Selected Location:', location); // Log the location object
-          //   handleCurrentLocation(mapRef, location);
-          // }}
         />
 
         <NavigationButtons
