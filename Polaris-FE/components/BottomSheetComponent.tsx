@@ -1,109 +1,128 @@
-import React, { useMemo, useState, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
-import BottomSheet, {
-  BottomSheetView,
-  BottomSheetTextInput,
-} from '@gorhom/bottom-sheet';
+import React, { useMemo, useState } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import Animated from 'react-native-reanimated';
 import GooglePlacesInput from '@/components/Helper/GooglePlacesInput';
-import { MapComponent } from '@/components/Map';
-import MapView from 'react-native-maps';
 import { Region } from 'react-native-maps';
-import { handleLocation } from '@/utils/mapHandlers';
-
-import { useSharedValue } from 'react-native-reanimated';
-
-interface Location {
-  name: string;
-  latitude: string;
-  longitude: string;
-}
 
 interface BottomSheetComponentProps {
   onSearchClick: (region: Region) => void;
   bottomSheetRef: React.RefObject<BottomSheet>;
-  onFocus: () => void;
   animatedPosition: Animated.SharedValue<number>;
 }
 
 export const BottomSheetComponent: React.FC<BottomSheetComponentProps> = ({
   onSearchClick,
   bottomSheetRef,
-  onFocus,
   animatedPosition,
 }) => {
   const snapPoints = useMemo(() => ['15%', '50%', '93%'], []);
-  const [location, setLocation] = useState<Location | null>(null);
-  const [clearLocationTrigger, setClearLocationTrigger] = useState(false);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
 
-  const handleLocationSelect = (selectedLocation: Location) => {
-    const region: Region = {
-      latitude: parseFloat(selectedLocation.latitude),
-      longitude: parseFloat(selectedLocation.longitude),
-      latitudeDelta: 0.001,
-      longitudeDelta: 0.001,
-    };
-    onSearchClick(region);
-    console.log('Selected Location:', selectedLocation);
+  const handleLocationSelect = (placeId: string, description: string) => {
+    fetch(
+      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=AIzaSyCIQzQHX5obH2Ev4jIX1qVy5i2zDn8nrYI`
+    )
+      .then(res => res.json())
+      .then(data => {
+        if (data.result) {
+          const location = {
+            name: description,
+            latitude: data.result.geometry.location.lat.toString(),
+            longitude: data.result.geometry.location.lng.toString(),
+          };
+
+          // Update map region
+          const region: Region = {
+            latitude: parseFloat(location.latitude),
+            longitude: parseFloat(location.longitude),
+            latitudeDelta: 0.001,
+            longitudeDelta: 0.001,
+          };
+
+          setSearchResults([]); // Clear results after selection
+          onSearchClick(region);
+        }
+      })
+      .catch(error => console.error(error));
   };
-
-  useEffect(() => {
-    console.log('Location:', location);
-  }, [location]);
 
   return (
     <BottomSheet
       index={1}
       ref={bottomSheetRef}
       snapPoints={snapPoints}
-      backgroundStyle={{ backgroundColor: 'rgba(34, 34, 34, 0.992)' }}
-      handleIndicatorStyle={{ backgroundColor: '#5E5F62' }}
+      backgroundStyle={styles.bottomSheet}
+      handleIndicatorStyle={styles.handleIndicator}
       animatedPosition={animatedPosition}
     >
-      <BottomSheetView
-        style={{ flex: 1, paddingHorizontal: 20, paddingTop: 10 }}
-      >
-        {/* "Search Polaris" text input */}
-        {/* <BottomSheetTextInput
-          testID="container-bottom-sheet-text-input"
-          placeholder="Search Polaris"
-          style={styles.input}
-          onFocus={onFocus}
-        /> */}
+      <BottomSheetView style={styles.content}>
+        {/* Google Places Input */}
+        <GooglePlacesInput setSearchResults={setSearchResults} />
 
-        {/* Google Places Autocomplete (Search based on input) */}
-        <GooglePlacesInput
-          setLocation={handleLocationSelect}
-          clearTrigger={clearLocationTrigger}
-        />
+        {/* Search Results */}
+        <View style={styles.resultsContainer}>
+          {searchResults.map((result, index) => (
+            <View key={index}>
+              <TouchableOpacity
+                style={styles.searchResult}
+                onPress={() =>
+                  handleLocationSelect(result.place_id, result.description)
+                }
+              >
+                <Text style={styles.searchResultText}>
+                  {result.description}
+                </Text>
+              </TouchableOpacity>
+
+              {/* Separator Line */}
+              {index < searchResults.length - 1 && (
+                <View style={styles.separator} />
+              )}
+            </View>
+          ))}
+        </View>
       </BottomSheetView>
     </BottomSheet>
   );
 };
 
 const styles = StyleSheet.create({
-  contentContainer: {
+  bottomSheet: {
+    backgroundColor: '#222', // Dark theme
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  handleIndicator: {
+    backgroundColor: '#5E5F62',
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    alignSelf: 'center',
+    marginVertical: 10,
+    marginBottom: 0,
+  },
+  content: {
     flex: 1,
-    alignItems: 'center',
-    padding: 10,
+    paddingHorizontal: 20,
+    paddingTop: 0,
   },
-  input: {
-    width: '92%',
-    marginBottom: 10,
-    borderRadius: 10,
-    fontSize: 16,
-    lineHeight: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-    backgroundColor: 'rgba(151, 151, 151, 0.25)',
-    color: 'white',
+  resultsContainer: {
+    marginTop: 0,
   },
-  mapContainer: {
+  searchResult: {
+    paddingVertical: 12, // Spacing between results
+    paddingHorizontal: 5,
+  },
+  searchResultText: {
     width: '100%',
-    height: 2000,
-    marginTop: 10,
-    borderRadius: 10,
-    overflow: 'hidden',
+    color: 'white',
+    fontSize: 16,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#5E5F62', // Subtle gray divider
+    marginHorizontal: 5,
   },
 });
 

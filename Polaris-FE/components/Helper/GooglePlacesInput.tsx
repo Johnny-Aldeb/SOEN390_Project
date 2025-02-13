@@ -1,120 +1,95 @@
-import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import 'react-native-get-random-values';
-import 'react-native-get-random-values';
-import Constants from 'expo-constants';
-
-// const GOOGLE_MAPS_API_KEY = Constants.expoConfig?.extra?.googleMapsApiKey as string;
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  TextInput,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+} from 'react-native';
 
 interface GooglePlacesInputProps {
-  setLocation: (location: any) => void;
-  clearTrigger: boolean;
-}
-
-interface LocationData {
-  name: string;
-  streetNumber: string;
-  streetName: string;
-  city: string;
-  province: string;
-  country: string;
-  postalCode: string;
-  latitude: string;
-  longitude: string;
+  setSearchResults: (results: any[]) => void;
 }
 
 const GooglePlacesInput: React.FC<GooglePlacesInputProps> = ({
-  setLocation,
-  clearTrigger,
+  setSearchResults,
 }) => {
-  const [selectedLocation, setSelectedLocation] = useState<LocationData | null>(
-    null
-  );
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
-    if (clearTrigger) {
-      setSelectedLocation(null);
+    if (query.length > 2) {
+      fetch(
+        `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query}&key=AIzaSyCIQzQHX5obH2Ev4jIX1qVy5i2zDn8nrYI`
+      )
+        .then(res => res.json())
+        .then(data => {
+          if (data.predictions) {
+            setSearchResults(data.predictions);
+          }
+        })
+        .catch(error => console.error(error));
+    } else {
+      setSearchResults([]); // Clear results if input is too short
     }
-  }, [clearTrigger]);
+  }, [query]);
 
   return (
-    <View style={{ flex: 1 }}>
-      <GooglePlacesAutocomplete
+    <View style={styles.container}>
+      {/* Search Input */}
+      <TextInput
+        value={query}
+        onChangeText={setQuery}
         placeholder="Search Polaris"
-        minLength={2}
-        fetchDetails={true}
-        onPress={(data, details = null) => {
-          if (details) {
-            const locationData = {
-              name: details.name,
-              streetNumber:
-                details.address_components.find(comp =>
-                  comp.types.includes('street_number')
-                )?.long_name || '',
-              streetName:
-                details.address_components.find(comp =>
-                  comp.types.includes('route')
-                )?.long_name || '',
-              city:
-                details.address_components.find(comp =>
-                  comp.types.includes('locality')
-                )?.long_name || '',
-              province:
-                details.address_components.find(comp =>
-                  comp.types.includes('administrative_area_level_1')
-                )?.long_name || '',
-              country:
-                details.address_components.find(comp =>
-                  comp.types.includes('country')
-                )?.long_name || '',
-              postalCode:
-                details.address_components.find(comp =>
-                  comp.types.includes('postal_code')
-                )?.long_name || '',
-              latitude: details.geometry.location.lat.toString(),
-              longitude: details.geometry.location.lng.toString(),
-            };
-
-            setSelectedLocation(locationData);
-            setLocation(locationData);
-          }
-        }}
-        query={{
-          key: 'AIzaSyCIQzQHX5obH2Ev4jIX1qVy5i2zDn8nrYI',
-          language: 'en',
-        }}
-        styles={{
-          textInput: {
-            width: '92%',
-            marginBottom: 10,
-            borderRadius: 10,
-            fontSize: 16,
-            lineHeight: 20,
-            paddingVertical: 8,
-            paddingHorizontal: 14,
-            backgroundColor: 'rgba(151, 151, 151, 0.25)',
-            color: 'white',
-          },
-          listView: {
-            borderWidth: 1,
-            borderColor: '#ccc',
-            backgroundColor: 'white',
-          },
-          poweredContainer: {
-            display: 'none',
-            height: 0,
-            opacity: 0,
-          },
-          powered: {
-            display: 'none',
-            height: 0,
-            opacity: 0,
-          },
-        }}
+        placeholderTextColor="gray"
+        style={styles.input}
       />
+
+      {/* Clear (X) Button Inside the Input */}
+      {query.length > 0 && (
+        <TouchableOpacity
+          onPress={() => setQuery('')}
+          style={styles.clearButton}
+        >
+          <Text style={styles.clearButtonText}>✕</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    width: '100%', // Ensure the parent view takes full width
+    position: 'relative',
+  },
+  input: {
+    width: '100%', // Ensure TextInput spans full width
+    marginRight: 0,
+    marginBottom: 0,
+    borderRadius: 10,
+    fontSize: 16,
+    lineHeight: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    backgroundColor: 'rgba(151, 151, 151, 0.25)',
+    color: 'white',
+  },
+  clearButton: {
+    position: 'absolute',
+    right: 14,
+    top: '55%',
+    transform: [{ translateY: -12 }],
+    width: 20, // Smaller button size
+    height: 20, // Same as width for a perfect circle
+    borderRadius: 10, // Half of width and height to make it circular
+    backgroundColor: 'rgba(151, 151, 151, 0.25)',
+    justifyContent: 'center', // Center the "X"
+    alignItems: 'center', // Center the "X"
+  },
+  clearButtonText: {
+    color: 'white',
+    fontSize: 12, // Smaller "X"
+  },
+});
 
 export default GooglePlacesInput;
