@@ -13,6 +13,7 @@ import {
   handleCurrentLocation,
   handleCampusSelect,
   handleCampusToggle,
+  handleLocation,
 } from '@/utils/mapHandlers';
 
 export default function HomeScreen() {
@@ -32,9 +33,18 @@ export default function HomeScreen() {
         <MapComponent mapRef={mapRef} region={region} setRegion={setRegion} />
         <BottomSheetComponent
           bottomSheetRef={bottomSheetRef}
-          onFocus={() => bottomSheetRef.current?.snapToIndex(3)}
+          // onFocus={() => bottomSheetRef.current?.snapToIndex(3)}
           animatedPosition={animatedPosition}
+          onSearchClick={(selectedRegion: Region) =>
+            handleLocation(
+              selectedRegion,
+              mapRef,
+              toggleAnimation,
+              optionsAnimation
+            )
+          }
         />
+
         <NavigationButtons
           onCampusToggle={() =>
             handleCampusToggle(
