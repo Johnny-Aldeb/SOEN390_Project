@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks';
 import { useCurrentBuilding } from '../useCurrentBuilding';
-import { downtownBuildings, loyolaBuildings } from '../../constants/buildings';
+import { downtownBuildings } from '../../constants/buildings';
 
 describe('useCurrentBuilding', () => {
   beforeEach(() => {
