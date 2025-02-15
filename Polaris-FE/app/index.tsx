@@ -14,6 +14,10 @@ import {
   handleCampusSelect,
   handleCampusToggle,
 } from '@/utils/mapHandlers';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { PaperProvider } from 'react-native-paper';
+
+const queryClient = new QueryClient();
 
 export default function HomeScreen() {
   const { location, region, setRegion } = useMapLocation();
@@ -27,38 +31,48 @@ export default function HomeScreen() {
   const animatedPosition = useSharedValue(0);
 
   return (
-    <GestureHandlerRootView style={styles.container}>
-      <SafeAreaProvider>
-        <MapComponent mapRef={mapRef} region={region} setRegion={setRegion} />
-        <BottomSheetComponent
-          bottomSheetRef={bottomSheetRef}
-          onFocus={() => bottomSheetRef.current?.snapToIndex(3)}
-          animatedPosition={animatedPosition}
-        />
-        <NavigationButtons
-          onCampusToggle={() =>
-            handleCampusToggle(
-              showCampusOptions,
-              setShowCampusOptions,
-              toggleAnimation,
-              optionsAnimation
-            )
-          }
-          onCampusSelect={(selectedRegion: Region) =>
-            handleCampusSelect(
-              selectedRegion,
-              mapRef,
-              setShowCampusOptions,
-              toggleAnimation,
-              optionsAnimation
-            )
-          }
-          onCurrentLocationPress={() => handleCurrentLocation(mapRef, location)}
-          animatedPosition={animatedPosition}
-          optionsAnimation={optionsAnimation}
-        />
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <QueryClientProvider client={queryClient}>
+      <PaperProvider>
+        <GestureHandlerRootView style={styles.container}>
+          <SafeAreaProvider>
+            <MapComponent
+              mapRef={mapRef}
+              region={region}
+              setRegion={setRegion}
+            />
+            <BottomSheetComponent
+              bottomSheetRef={bottomSheetRef}
+              onFocus={() => bottomSheetRef.current?.snapToIndex(3)}
+              animatedPosition={animatedPosition}
+            />
+            <NavigationButtons
+              onCampusToggle={() =>
+                handleCampusToggle(
+                  showCampusOptions,
+                  setShowCampusOptions,
+                  toggleAnimation,
+                  optionsAnimation
+                )
+              }
+              onCampusSelect={(selectedRegion: Region) =>
+                handleCampusSelect(
+                  selectedRegion,
+                  mapRef,
+                  setShowCampusOptions,
+                  toggleAnimation,
+                  optionsAnimation
+                )
+              }
+              onCurrentLocationPress={() =>
+                handleCurrentLocation(mapRef, location)
+              }
+              animatedPosition={animatedPosition}
+              optionsAnimation={optionsAnimation}
+            />
+          </SafeAreaProvider>
+        </GestureHandlerRootView>
+      </PaperProvider>
+    </QueryClientProvider>
   );
 }
 

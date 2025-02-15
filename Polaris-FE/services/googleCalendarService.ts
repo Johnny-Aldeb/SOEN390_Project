@@ -1,7 +1,10 @@
 import { GoogleEvent } from '@/constants/GoogleEvent';
 
-export async function fetchCalendars(accessToken: string) {
-  const response = await fetch(
+export async function fetchCalendars(
+  accessToken: string,
+  refreshAccessToken: () => Promise<void>
+) {
+  let response = await fetch(
     'https://www.googleapis.com/calendar/v3/users/me/calendarList',
     {
       headers: {
@@ -10,7 +13,20 @@ export async function fetchCalendars(accessToken: string) {
     }
   );
 
+  if (response.status === 401) {
+    await refreshAccessToken();
+
+    response = await fetch(
+      'https://www.googleapis.com/calendar/v3/users/me/calendarList',
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+  }
   const data = await response.json();
+
   return data.items;
 }
 
@@ -18,6 +34,14 @@ export async function fetchNextEvent(
   accessToken: string,
   calendarId: string
 ): Promise<GoogleEvent | null> {
+  if (!accessToken) {
+    throw new Error('Access token is required');
+  }
+
+  if (!calendarId) {
+    throw new Error('Calendar ID is required');
+  }
+
   const now = new Date().toISOString();
 
   const response = await fetch(
@@ -27,13 +51,22 @@ export async function fetchNextEvent(
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
+        Accept: 'application/json',
       },
     }
   );
 
-  const data = await response.json();
-  if (response.ok && data.items?.length > 0) {
-    return data.items[0] as GoogleEvent;
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch events: ${response.status} ${response.statusText}`
+    );
   }
-  return null;
+
+  const data = await response.json();
+
+  if (!data.items || data.items.length === 0) {
+    return null;
+  }
+
+  return data.items[0] as GoogleEvent;
 }

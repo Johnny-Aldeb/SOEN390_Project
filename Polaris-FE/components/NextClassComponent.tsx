@@ -5,50 +5,77 @@ import {
   Text,
   Button,
   Menu,
-  Divider,
-  IconButton,
+  ActivityIndicator,
 } from 'react-native-paper';
 import dayjs from 'dayjs';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { useGoogleAuth } from '@/hooks/useGoogleAuth';
+import { useGoogleCalendars } from '@/hooks/useGoogleCalendar';
+import { useGoogleNextEvent } from '@/hooks/useGoogleNextEvent';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const screenWidth = Dimensions.get('window').width;
 
 const NextClassCard = () => {
-  const { user, accessToken, promptAsync, logout } = useGoogleAuth();
   const [visible, setVisible] = useState(false);
-  const [selectedCalendar, setSelectedCalendar] = useState('Select a calendar');
+  const [selectedCalendarId, setSelectedCalendarId] = useState<string | null>(
+    null
+  );
+  const [selectedCalendarName, setSelectedCalendarName] =
+    useState<string>('Select a calendar');
   const [timeLeft, setTimeLeft] = useState(0);
   const [progress, setProgress] = useState(0);
+
+  const { user, accessToken, promptAsync } = useGoogleAuth();
+  const { data: calendars, isLoading, error, refetch } = useGoogleCalendars();
+  const { data: nextevent } = useGoogleNextEvent(
+    accessToken,
+    selectedCalendarId
+  );
 
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
 
   useEffect(() => {
+    if (user && accessToken) {
+      refetch(); // 🔄 Force calendar reload after sign-in
+    }
+  }, [user, accessToken, refetch]);
+
+  useEffect(() => {
+    if (!nextevent?.start?.dateTime) {
+      setTimeLeft(0);
+      setProgress(0);
+      return;
+    }
+
     const updateTimer = () => {
       const now = dayjs();
-      const nextClassTime = dayjs().add(1, 'day').hour(15).minute(0).second(0);
-      console.log(nextClassTime);
+      const nextClassTime = dayjs(nextevent?.start?.dateTime);
 
       const remainingSeconds = nextClassTime.diff(now, 'second');
+      setTimeLeft(remainingSeconds > 0 ? remainingSeconds : 0);
 
-      setTimeLeft(remainingSeconds);
-
-      const totalSeconds = 24 * 60 * 60;
-      setProgress(((totalSeconds - remainingSeconds) / totalSeconds) * 100);
+      const totalSeconds = nextClassTime.diff(now.startOf('day'), 'second');
+      setProgress(
+        totalSeconds > 0
+          ? ((totalSeconds - remainingSeconds) / totalSeconds) * 100
+          : 0
+      );
     };
 
     updateTimer();
-    const interval = setInterval(updateTimer, 60000);
+    const interval = setInterval(updateTimer, 60000); // Update every minute
 
     return () => clearInterval(interval);
-  }, []);
+  }, [nextevent]);
 
   const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     return `${hours}h ${minutes}m`;
   };
+
   return user ? (
     <Card style={styles.card}>
       <Card.Content>
@@ -81,40 +108,45 @@ const NextClassCard = () => {
               style={styles.menuButton}
               labelStyle={styles.menuText}
             >
-              {selectedCalendar}
+              {selectedCalendarName}
             </Button>
           }
         >
-          <Menu.Item
-            onPress={() => {
-              setSelectedCalendar('Google Calendar');
-              closeMenu();
-            }}
-            title="Google Calendar"
-          />
-          <Divider />
-          <Menu.Item
-            onPress={() => {
-              setSelectedCalendar('Apple Calendar');
-              closeMenu();
-            }}
-            title="Apple Calendar"
-          />
-          <Divider />
-          <Menu.Item
-            onPress={() => {
-              setSelectedCalendar('Outlook Calendar');
-              closeMenu();
-            }}
-            title="Outlook Calendar"
-          />
+          {isLoading ? (
+            <ActivityIndicator animating size="small" color="#ffffff" />
+          ) : error ? (
+            <Menu.Item title="Error loading calendars" disabled />
+          ) : calendars && calendars.length > 0 ? (
+            calendars.map(calendar => (
+              <Menu.Item
+                key={calendar.id}
+                onPress={() => {
+                  setSelectedCalendarId(calendar.id);
+                  setSelectedCalendarName(calendar.summary);
+                  closeMenu();
+                }}
+                title={calendar.summary}
+              />
+            ))
+          ) : (
+            <Menu.Item title="No calendars available" disabled />
+          )}
         </Menu>
 
-        <View style={styles.separator} />
-
-        <Text style={styles.classText}>SOEN 423 Distributed Systems</Text>
-        <Text style={styles.locationText}>H-917</Text>
-        <Text style={styles.timeText}>11:00 - 13:00</Text>
+        {/* Event Details */}
+        {nextevent ? (
+          <>
+            <View style={styles.separator} />
+            <Text style={styles.classText}>{nextevent?.summary}</Text>
+            <Text style={styles.locationText}>{nextevent?.location}</Text>
+            <Text style={styles.timeText}>
+              {dayjs(nextevent?.start?.dateTime).format('hh:mm A')} -{' '}
+              {dayjs(nextevent?.end?.dateTime).format('hh:mm A')}
+            </Text>
+          </>
+        ) : (
+          <Text style={styles.noEventText}>🚀 No Future Events Found</Text>
+        )}
       </Card.Content>
 
       <Card.Actions>
@@ -130,17 +162,20 @@ const NextClassCard = () => {
     </Card>
   ) : (
     <Card style={styles.card}>
-      <Card.Content>
-        <Text style={styles.title}>Sign in to see your232 next cl232ass</Text>
+      <Card.Content style={styles.centeredContent}>
         <Button
-          //mode="contained"
-          onPress={() => {
-            console.log('Signing in...');
-            promptAsync();
-          }}
-          //style={styles.button}
+          mode="contained"
+          style={styles.signInButton}
+          labelStyle={styles.signInText}
+          onPress={() => promptAsync()}
         >
-          Sign in with Google
+          <FontAwesome
+            name="google"
+            size={20}
+            color="white"
+            style={styles.googleIcon}
+          />
+          <Text style={styles.signInText}>Sign in with Google</Text>
         </Button>
       </Card.Content>
     </Card>
@@ -151,9 +186,13 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#1E1E1E',
     borderRadius: 10,
-    padding: 5,
+    padding: 10,
     margin: 10,
     width: screenWidth * 0.9,
+  },
+  centeredContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   header: {
     flexDirection: 'row',
@@ -162,7 +201,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: 'white',
-    fontSize: 30,
+    fontSize: 28,
     fontWeight: 'bold',
   },
   timer: {
@@ -179,10 +218,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  timerSubText: {
-    color: 'white',
-    fontSize: 10,
-  },
   menuButton: {
     alignSelf: 'flex-start',
     paddingHorizontal: 0,
@@ -198,22 +233,55 @@ const styles = StyleSheet.create({
   },
   classText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     marginTop: 5,
   },
   locationText: {
-    color: 'white',
-    fontSize: 14,
+    color: '#B0B0B0',
+    fontSize: 16,
+    marginBottom: 5,
   },
   timeText: {
     color: 'white',
-    fontSize: 14,
+    fontSize: 16,
     marginBottom: 10,
+  },
+  noEventText: {
+    color: '#D84343',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginVertical: 10,
   },
   button: {
     flex: 1,
     borderRadius: 5,
+  },
+  signInButton: {
+    marginTop: 10,
+    backgroundColor: '#D84343',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignSelf: 'center',
+    minWidth: 260, // ✅ Slightly wider button
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    flexDirection: 'row', // ✅ Ensures icon & text align in a row
+    alignItems: 'center', // ✅ Center items properly
+    justifyContent: 'center', // ✅ Even spacing
+  },
+  googleIcon: {
+    marginRight: 10, // ✅ Adds space between "G" icon and text
+  },
+  signInText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
   },
 });
 
