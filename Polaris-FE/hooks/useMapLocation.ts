@@ -63,7 +63,7 @@ export const useMapLocation = () => {
             latitudeDelta: 0.02,
             longitudeDelta: 0.02,
           });
-        }, 3000);
+        }, 1000);
       } catch (error) {
         setPermissionStatus('error');
       }
