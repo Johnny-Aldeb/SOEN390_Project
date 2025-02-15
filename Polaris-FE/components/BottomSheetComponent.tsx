@@ -5,6 +5,7 @@ import BottomSheet, {
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import Animated from 'react-native-reanimated';
+import NextClassCard from './NextClassComponent';
 
 interface BottomSheetComponentProps {
   bottomSheetRef: React.RefObject<BottomSheet>;
@@ -37,6 +38,7 @@ export const BottomSheetComponent: React.FC<BottomSheetComponentProps> = ({
           style={styles.input}
           onFocus={onFocus}
         />
+        <NextClassCard />
       </BottomSheetView>
     </BottomSheet>
   );
