@@ -1,60 +1,129 @@
-import React, { useMemo } from 'react';
-import { StyleSheet } from 'react-native';
-import BottomSheet, {
-  BottomSheetTextInput,
-  BottomSheetView,
-} from '@gorhom/bottom-sheet';
+import React, { useMemo, useState } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import Animated from 'react-native-reanimated';
+import GooglePlacesInput from '@/components/GooglePlacesInput';
+import { Region } from 'react-native-maps';
 
 interface BottomSheetComponentProps {
+  onSearchClick: (region: Region) => void;
   bottomSheetRef: React.RefObject<BottomSheet>;
-  onFocus: () => void;
   animatedPosition: Animated.SharedValue<number>;
 }
 
 export const BottomSheetComponent: React.FC<BottomSheetComponentProps> = ({
+  onSearchClick,
   bottomSheetRef,
-  onFocus,
   animatedPosition,
 }) => {
   const snapPoints = useMemo(() => ['15%', '50%', '93%'], []);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+
+  const handleLocationSelect = (placeId: string, description: string) => {
+    fetch(
+      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=AIzaSyCIQzQHX5obH2Ev4jIX1qVy5i2zDn8nrYI`
+    )
+      .then(res => res.json())
+      .then(data => {
+        if (data.result) {
+          const location = {
+            name: description,
+            latitude: data.result.geometry.location.lat.toString(),
+            longitude: data.result.geometry.location.lng.toString(),
+          };
+
+          // Update map region
+          const region: Region = {
+            latitude: parseFloat(location.latitude),
+            longitude: parseFloat(location.longitude),
+            latitudeDelta: 0.001,
+            longitudeDelta: 0.001,
+          };
+
+          setSearchResults([]);
+          onSearchClick(region);
+        }
+      })
+      .catch(error => console.error(error));
+  };
 
   return (
     <BottomSheet
       index={1}
       ref={bottomSheetRef}
       snapPoints={snapPoints}
-      backgroundStyle={{
-        backgroundColor: 'rgba(34, 34, 34, 0.992)',
-      }}
-      handleIndicatorStyle={{ backgroundColor: '#5E5F62' }}
+      backgroundStyle={styles.bottomSheet}
+      handleIndicatorStyle={styles.handleIndicator}
       animatedPosition={animatedPosition}
     >
-      <BottomSheetView style={styles.contentContainer}>
-        <BottomSheetTextInput
-          testID="container-bottom-sheet-text-input"
-          placeholder={'Search Polaris'}
-          style={styles.input}
-          onFocus={onFocus}
-        />
+      <BottomSheetView style={styles.content}>
+        {/* Google Places Input */}
+        <GooglePlacesInput setSearchResults={setSearchResults} />
+
+        {/* Search Results */}
+        <View style={styles.resultsContainer}>
+          {searchResults.map((result, index) => (
+            <View key={index}>
+              <TouchableOpacity
+                style={styles.searchResult}
+                onPress={() =>
+                  handleLocationSelect(result.place_id, result.description)
+                }
+              >
+                <Text style={styles.searchResultText}>
+                  {result.description}
+                </Text>
+              </TouchableOpacity>
+
+              {/* Separator Line */}
+              {index < searchResults.length - 1 && (
+                <View style={styles.separator} />
+              )}
+            </View>
+          ))}
+        </View>
       </BottomSheetView>
     </BottomSheet>
   );
 };
 
 const styles = StyleSheet.create({
-  contentContainer: {
-    flex: 1,
-    alignItems: 'center',
+  bottomSheet: {
+    backgroundColor: '#222',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
-  input: {
-    width: '92%',
-    marginBottom: 10,
-    borderRadius: 10,
+  handleIndicator: {
+    backgroundColor: '#5E5F62',
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    alignSelf: 'center',
+    marginVertical: 10,
+    marginBottom: 0,
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 0,
+  },
+  resultsContainer: {
+    marginTop: 0,
+  },
+  searchResult: {
+    paddingVertical: 12,
+    paddingHorizontal: 5,
+  },
+  searchResultText: {
+    width: '100%',
+    color: 'white',
     fontSize: 16,
-    lineHeight: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-    backgroundColor: 'rgba(151, 151, 151, 0.25)',
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#5E5F62',
+    marginHorizontal: 5,
   },
 });
+
+export default BottomSheetComponent;
