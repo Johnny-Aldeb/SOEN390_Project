@@ -2,6 +2,12 @@ import { useEffect, useState } from 'react';
 import { useMapLocation } from './useMapLocation';
 import { downtownBuildings, loyolaBuildings } from '../constants/buildings';
 
+interface Building {
+  geometry: {
+    coordinates: number[][][];
+  };
+}
+
 const isPointInPolygon = (point: [number, number], polygon: number[][]) => {
   const [x, y] = point;
   let inside = false;
@@ -16,23 +22,18 @@ const isPointInPolygon = (point: [number, number], polygon: number[][]) => {
 };
 
 const findCurrentBuilding = (latitude: number, longitude: number) => {
-  const allBuildings = [
-    ...downtownBuildings.features,
-    ...loyolaBuildings.features,
-  ];
-  return allBuildings.find(building => {
-    const coordinates = building.geometry.coordinates[0];
-    return isPointInPolygon([longitude, latitude], coordinates);
-  });
+  const searchBuildings = (buildings: { features: Building[] }) => {
+    return buildings.features.find(building => {
+      const coordinates = building.geometry.coordinates[0];
+      return isPointInPolygon([longitude, latitude], coordinates);
+    });
+  };
+
+  return searchBuildings(downtownBuildings) || searchBuildings(loyolaBuildings);
 };
 
 export const useCurrentBuilding = () => {
   const { location } = useMapLocation();
-  interface Building {
-    geometry: {
-      coordinates: number[][][];
-    };
-  }
 
   const [currentBuilding, setCurrentBuilding] = useState<Building | null>(null);
 

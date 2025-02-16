@@ -43,4 +43,38 @@ describe('useCurrentBuilding', () => {
 
     expect(result.current).toBeNull();
   });
+
+  it('should return the correct building for a boundary location', () => {
+    const mockLocation = { latitude: '45.495413', longitude: '-73.579399' };
+    jest
+      .spyOn(require('../useMapLocation'), 'useMapLocation')
+      .mockReturnValue({ location: mockLocation });
+
+    const { result } = renderHook(() => useCurrentBuilding());
+
+    const expectedBuilding = downtownBuildings.features[1];
+
+    expect(result.current).toEqual(expectedBuilding);
+  });
+
+  it('should handle invalid coordinates gracefully', () => {
+    const mockLocation = { latitude: 'invalid', longitude: 'invalid' };
+    jest
+      .spyOn(require('../useMapLocation'), 'useMapLocation')
+      .mockReturnValue({ location: mockLocation });
+
+    const { result } = renderHook(() => useCurrentBuilding());
+
+    expect(result.current).toBeNull();
+  });
+
+  it('should handle null location input', () => {
+    jest
+      .spyOn(require('../useMapLocation'), 'useMapLocation')
+      .mockReturnValue({ location: null });
+
+    const { result } = renderHook(() => useCurrentBuilding());
+
+    expect(result.current).toBeNull();
+  });
 });
